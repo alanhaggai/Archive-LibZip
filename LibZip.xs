@@ -4,6 +4,28 @@
 
 #include "ppport.h"
 
+#include <zip.h>
+#include <zipint.h>
+
+typedef HV *Archive__LibZip;
+
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip
 
 PROTOTYPES: ENABLE
+
+int
+open( lz, path )
+        Archive::LibZip  lz
+        const char      *path
+
+    CODE:
+        int         error = ZIP_ER_OK;
+        struct zip *archive;
+
+        archive = zip_open( path, 0, &error );
+        hv_store( lz, "archive", 7, newSVuv( ( unsigned int ) archive ), 0 );
+
+        RETVAL = error;
+
+    OUTPUT:
+        RETVAL

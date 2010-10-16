@@ -1,0 +1,2 @@
+TYPEMAP
+Archive::LibZip T_HVREF
