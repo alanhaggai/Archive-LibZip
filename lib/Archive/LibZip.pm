@@ -28,6 +28,9 @@ use constant {
     ZIP_ER_OPEN   => 11,
     ZIP_ER_SEEK   => 4,
     ZIP_ER_READ   => 5,
+    ZIP_CREATE    => 1,
+    ZIP_EXCL      => 2,
+    ZIP_CHECKCONS => 4,
 };
 
 sub new {
