@@ -10,6 +10,11 @@ our $VERSION = '0.01';
 require XSLoader;
 XSLoader::load( 'Archive::LibZip', $VERSION );
 
+sub new {
+    my $package = shift;
+    return bless {}, $package;
+}
+
 1;
 
 
