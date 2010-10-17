@@ -11,4 +11,4 @@ my $status;
 
 my $file = 'files/sample.zip';
 $status = $lz->open($file);
-is ( $status, ZIP_ER_OK, 'file opened successfully' );
+is( $status, ZIP_ER_OK, 'file opened successfully' );

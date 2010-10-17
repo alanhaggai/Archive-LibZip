@@ -12,26 +12,29 @@ XSLoader::load( 'Archive::LibZip', $VERSION );
 
 use base 'Exporter';
 
-our @EXPORT_OK = qw{
-    ZIP_ER_OK
-};
-our %EXPORT_TAGS = ( 'constants' => \@EXPORT_OK );
+BEGIN {
+    my %constants = (
+        ZIP_ER_OK     => 0,
+        ZIP_ER_EXISTS => 10,
+        ZIP_ER_INCONS => 21,
+        ZIP_ER_INVAL  => 18,
+        ZIP_ER_MEMORY => 14,
+        ZIP_ER_NOENT  => 9,
+        ZIP_ER_NOZIP  => 19,
+        ZIP_ER_OPEN   => 11,
+        ZIP_ER_SEEK   => 4,
+        ZIP_ER_READ   => 5,
+        ZIP_CREATE    => 1,
+        ZIP_EXCL      => 2,
+        ZIP_CHECKCONS => 4,
+    );
 
-use constant {
-    ZIP_ER_OK     => 0,
-    ZIP_ER_EXISTS => 10,
-    ZIP_ER_INCONS => 21,
-    ZIP_ER_INVAL  => 18,
-    ZIP_ER_MEMORY => 14,
-    ZIP_ER_NOENT  => 9,
-    ZIP_ER_NOZIP  => 19,
-    ZIP_ER_OPEN   => 11,
-    ZIP_ER_SEEK   => 4,
-    ZIP_ER_READ   => 5,
-    ZIP_CREATE    => 1,
-    ZIP_EXCL      => 2,
-    ZIP_CHECKCONS => 4,
-};
+    require constant;
+    constant->import(\%constants);
+
+    our @EXPORT_OK = keys %constants;
+    our %EXPORT_TAGS = ( 'constants' => \@EXPORT_OK );
+}
 
 sub new {
     my $package = shift;
