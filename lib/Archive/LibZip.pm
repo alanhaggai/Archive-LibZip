@@ -27,6 +27,8 @@ BEGIN {
         ZIP_CREATE    => 1,
         ZIP_EXCL      => 2,
         ZIP_CHECKCONS => 4,
+        ZIP_FL_NOCASE => 1,
+        ZIP_FL_NODIR  => 2,
     );
 
     require constant;
