@@ -50,3 +50,29 @@ find( lz, filename, flag = 0 )
 
     OUTPUT:
         RETVAL
+
+SV *
+fopen( lz, filename, flag = 0 )
+        Archive::LibZip  lz
+        const char      *filename
+        int              flag
+
+    CODE:
+        struct zip      *archive;
+        struct zip_file *file;
+
+        archive = _get_archive_struct(lz);
+        file    = zip_fopen( archive, filename, flag );
+
+        if ( file != NULL ) {
+            SV *lz_file = newRV_inc( ( SV * ) newSV(0) );
+            sv_setref_pv( lz_file, "Archive::LibZip::File", file );
+
+            RETVAL = lz_file;
+        }
+        else {
+            RETVAL = &PL_sv_undef;
+        }
+
+    OUTPUT:
+        RETVAL

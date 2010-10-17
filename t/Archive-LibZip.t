@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 BEGIN { use_ok( 'Archive::LibZip', ':constants' ) }
 
 my $lz = Archive::LibZip->new();
@@ -18,3 +18,6 @@ is (
     $lz->find( 'B', ZIP_FL_NOCASE | ZIP_FL_NODIR ),
     1, 'file matched (case insensitive, no directory)'
 );
+
+my $lz_file = $lz->fopen('a/b');
+isa_ok( $lz_file, 'Archive::LibZip::File' );
