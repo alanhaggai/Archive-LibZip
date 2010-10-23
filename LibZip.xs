@@ -5,7 +5,7 @@
 #include "ppport.h"
 
 #include <zip.h>
-#include <zipint.h>
+#include "zipint.h"
 
 typedef HV *Archive__LibZip;
 
