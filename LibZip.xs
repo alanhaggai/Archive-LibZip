@@ -51,13 +51,13 @@ find(lz, filename, flag = 0)
     OUTPUT:
         RETVAL
 
-SV *
+void
 fopen(lz, filename, flag = 0)
         Archive::LibZip  lz
         const char      *filename
         int              flag
 
-    CODE:
+    PPCODE:
         struct zip      *archive;
         struct zip_file *file;
 
@@ -65,14 +65,14 @@ fopen(lz, filename, flag = 0)
         file    = zip_fopen(archive, filename, flag);
 
         if (file != NULL) {
-            SV *lz_file = newRV_inc((SV *)newSV(0));
-            sv_setref_pv(lz_file, "Archive::LibZip::File", file);
+            HV *hash = (HV *)sv_2mortal((SV *)newHV());
+            hv_store(hash, "file", 4, newSVuv((unsigned int)file), 0);
 
-            RETVAL = lz_file;
+            SV *lz_file = sv_bless(newRV((SV *)hash),
+                                   gv_stashpv("Archive::LibZip::File", 1));
+
+            XPUSHs(sv_2mortal(lz_file));
         }
         else {
-            RETVAL = &PL_sv_undef;
+            XPUSHs(&PL_sv_undef);
         }
-
-    OUTPUT:
-        RETVAL
