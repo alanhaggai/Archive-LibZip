@@ -10,9 +10,9 @@
 typedef HV *Archive__LibZip;
 
 struct zip *
-_get_archive_struct( Archive__LibZip lz ) {
-    SV **archive_ptr = hv_fetch( lz, "archive", 7, 0 );
-    return ( struct zip * ) SvIV( *archive_ptr );
+_get_archive_struct(Archive__LibZip lz) {
+    SV **archive_ptr = hv_fetch(lz, "archive", 7, 0);
+    return (struct zip *)SvIV(*archive_ptr);
 }
 
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip
@@ -20,7 +20,7 @@ MODULE = Archive::LibZip    PACKAGE = Archive::LibZip
 PROTOTYPES: ENABLE
 
 int
-open( lz, path, flag = 0 )
+open(lz, path, flag = 0)
         Archive::LibZip  lz
         const char      *path
         int              flag
@@ -29,8 +29,8 @@ open( lz, path, flag = 0 )
         int         error = ZIP_ER_OK;
         struct zip *archive;
 
-        archive = zip_open( path, flag, &error );
-        hv_store( lz, "archive", 7, newSVuv( ( unsigned int ) archive ), 0 );
+        archive = zip_open(path, flag, &error);
+        hv_store(lz, "archive", 7, newSVuv((unsigned int)archive), 0);
 
         RETVAL = error;
 
@@ -38,7 +38,7 @@ open( lz, path, flag = 0 )
         RETVAL
 
 int
-find( lz, filename, flag = 0 )
+find(lz, filename, flag = 0)
         Archive::LibZip  lz
         const char      *filename
         int              flag
@@ -46,13 +46,13 @@ find( lz, filename, flag = 0 )
     CODE:
         struct zip *archive = _get_archive_struct(lz);
 
-        RETVAL = zip_name_locate( archive, filename, flag );
+        RETVAL = zip_name_locate(archive, filename, flag);
 
     OUTPUT:
         RETVAL
 
 SV *
-fopen( lz, filename, flag = 0 )
+fopen(lz, filename, flag = 0)
         Archive::LibZip  lz
         const char      *filename
         int              flag
@@ -62,11 +62,11 @@ fopen( lz, filename, flag = 0 )
         struct zip_file *file;
 
         archive = _get_archive_struct(lz);
-        file    = zip_fopen( archive, filename, flag );
+        file    = zip_fopen(archive, filename, flag);
 
-        if ( file != NULL ) {
-            SV *lz_file = newRV_inc( ( SV * ) newSV(0) );
-            sv_setref_pv( lz_file, "Archive::LibZip::File", file );
+        if (file != NULL) {
+            SV *lz_file = newRV_inc((SV *)newSV(0));
+            sv_setref_pv(lz_file, "Archive::LibZip::File", file);
 
             RETVAL = lz_file;
         }
