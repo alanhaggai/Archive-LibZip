@@ -8,11 +8,18 @@
 #include "zipint.h"
 
 typedef HV *Archive__LibZip;
+typedef HV *Archive__LibZip__File;
 
 struct zip *
 _get_archive_struct(Archive__LibZip lz) {
     SV **archive_ptr = hv_fetch(lz, "archive", 7, 0);
     return (struct zip *)(unsigned int)SvIV(*archive_ptr);
+}
+
+struct zip_file *
+_get_file_struct(Archive__LibZip__File lz_file) {
+    SV **file_ptr = hv_fetch(lz_file, "file", 4, 0);
+    return (struct zip_file *)(unsigned int)SvIV(*file_ptr);
 }
 
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip
@@ -101,3 +108,31 @@ error(lz, option)
 
     OUTPUT:
         RETVAL
+
+MODULE = Archive::LibZip    PACKAGE = Archive::LibZip::File
+
+void
+fread(lz_file, ...)
+        Archive::LibZip::File lz_file
+
+    PPCODE:
+        struct zip_file *file;
+        char            *buffer;
+        unsigned long    bytes;
+        int              status;
+
+        file = _get_file_struct(lz_file);
+
+        if (items == 1) {
+            bytes = file->bytes_left;
+        }
+        else {
+            bytes = (int)SvIV(ST(1));
+        }
+
+        buffer = (char *)malloc(bytes);
+        memset(buffer, '\0', bytes);
+        status = zip_fread(file, buffer, bytes);
+
+        XPUSHs(sv_2mortal(newSVpv(buffer, bytes)));
+        XPUSHs(sv_2mortal(newSVuv(status)));
