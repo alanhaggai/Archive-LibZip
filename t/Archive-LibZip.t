@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 BEGIN { use_ok( 'Archive::LibZip', ':constants' ) }
 
 my $lz = Archive::LibZip->new();
@@ -25,8 +25,10 @@ isa_ok( $lz_file, 'Archive::LibZip::File' );
 my ( $text, $status ) = $lz_file->fread();
 is( $status, 14, 'status OK' );
 is( $text,  "Hello, world!\n", 'fread() without argument' );
+is( $lz_file->fclose(), ZIP_ER_OK, 'close file' );
 
 $lz_file = $lz->fopen('a/b');
 ( $text, $status ) = $lz_file->fread(5);
 is( $status, 5, 'status OK' );
 is( $text,  'Hello', 'fread() with argument' );
+$lz_file->fclose();

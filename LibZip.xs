@@ -136,3 +136,17 @@ fread(lz_file, ...)
 
         XPUSHs(sv_2mortal(newSVpv(buffer, bytes)));
         XPUSHs(sv_2mortal(newSVuv(status)));
+
+int
+fclose(lz_file)
+        Archive::LibZip::File lz_file
+
+    CODE:
+        struct zip_file *file;
+
+        file = _get_file_struct(lz_file);
+
+        RETVAL = zip_fclose(file);
+
+    OUTPUT:
+        RETVAL
