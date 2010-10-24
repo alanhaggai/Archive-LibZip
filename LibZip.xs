@@ -12,7 +12,7 @@ typedef HV *Archive__LibZip;
 struct zip *
 _get_archive_struct(Archive__LibZip lz) {
     SV **archive_ptr = hv_fetch(lz, "archive", 7, 0);
-    return (struct zip *)SvIV(*archive_ptr);
+    return (struct zip *)(unsigned int)SvIV(*archive_ptr);
 }
 
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip
