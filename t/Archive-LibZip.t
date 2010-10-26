@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
+
 BEGIN { use_ok( 'Archive::LibZip', ':constants' ) }
 
 my $lz = Archive::LibZip->new();
@@ -31,3 +32,18 @@ $lz_file = $lz->fopen('a/b');
 is( $status, 5, 'status OK' );
 is( $text,  'Hello', 'fread() with argument' );
 $lz_file->fclose();
+
+is_deeply(
+    $lz->stat('a/b'),
+    {
+        'mtime'             => 1287053122,
+        'compressed_method' => 49894,
+        'crc'               => 2069210904,
+        'name'              => 'a/b',
+        'compressed_size'   => 0,
+        'size'              => 14,
+        'index'             => 1,
+        'encryption_method' => 2064,
+    },
+    'stat'
+);

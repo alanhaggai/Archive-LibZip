@@ -109,6 +109,43 @@ error(lz, option)
     OUTPUT:
         RETVAL
 
+SV *
+stat(lz, filename, flag = 0)
+        Archive::LibZip  lz
+        const char      *filename
+        int              flag
+
+    CODE:
+        struct zip      *archive;
+        struct zip_stat  sb;
+
+        archive = _get_archive_struct(lz);
+
+        zip_stat_init(&sb);
+        if (zip_stat(archive, filename, flag, &sb) == 0) {
+            HV *stat = newHV();
+
+            hv_store(stat, "name",  4, newSVpv(sb.name,  strlen(sb.name)),  0);
+            hv_store(stat, "index", 5, newSViv(sb.index),                   0);
+            hv_store(stat, "crc",   3, newSViv(sb.crc),                     0);
+            hv_store(stat, "mtime", 5, newSViv(sb.mtime),                   0);
+            hv_store(stat, "size",  4, newSVuv((unsigned int)sb.size),      0);
+            hv_store(stat, "compressed_size", 15,
+                     newSVuv((unsigned int)sb.comp_size), 0);
+            hv_store(stat, "compressed_method", 17,
+                     newSVuv((unsigned short)sb.comp_method), 0);
+            hv_store(stat, "encryption_method", 17,
+                     newSVuv((unsigned short)sb.encryption_method), 0);
+
+            RETVAL = newRV(stat);
+        }
+        else {
+            RETVAL = newSViv(0);
+        }
+
+    OUTPUT:
+        RETVAL
+
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip::File
 
 void
