@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 BEGIN { use_ok( 'Archive::LibZip', ':constants' ) }
 
@@ -45,3 +45,6 @@ is_deeply(
     },
     'stat'
 );
+
+is( $lz->comment(), 'This is a .ZIP archive for tests against Archive::LibZip',
+    'comment' );

@@ -146,6 +146,26 @@ stat(lz, filename, flag = 0)
     OUTPUT:
         RETVAL
 
+SV *
+comment(lz, flag = 0)
+        Archive::LibZip lz
+        int             flag
+
+    CODE:
+        struct zip *archive;
+        char       *comment;
+        int         length;
+
+        archive = _get_archive_struct(lz);
+
+        comment = zip_get_archive_comment(archive, &length, flag);
+
+        RETVAL = newSVpv(comment, length);
+
+    OUTPUT:
+        RETVAL
+
+
 MODULE = Archive::LibZip    PACKAGE = Archive::LibZip::File
 
 void
